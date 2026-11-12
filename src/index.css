@@ -1,0 +1,189 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+:root {
+  --bg: #efebe5;
+  --bg-soft: #e6e0d7;
+  --card: #f6f3ee;
+  --ink: #1c1916;
+  --muted: #5f564d;
+  --line: rgb(28 25 22 / 0.14);
+  --accent: #9a5f34;
+  --accent-text: #85502a; /* accent assombri pour petit texte : contraste AA */
+  --accent-soft: #e7d3bf;
+  --wax: #e9dcc9; /* couleur du rideau de transition */
+  --glow: 255 196 128;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #14110e;
+  --bg-soft: #1d1915;
+  --card: #221d18;
+  --ink: #efebe5;
+  --muted: #b3a89c;
+  --line: rgb(239 235 229 / 0.14);
+  --accent: #d08a55;
+  --accent-text: #e09a63;
+  --accent-soft: #3a2a1d;
+  --wax: #2b221a;
+  --glow: 255 170 90;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-ambre: var(--accent);
+  --color-ambre-text: var(--accent-text);
+  --color-ambre-soft: var(--accent-soft);
+  --color-wax: var(--wax);
+  --font-serif: 'Bodoni Moda', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Hanken Grotesk', 'Manrope', system-ui, sans-serif;
+  --ease-wax: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+body {
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Curseur personnalisé : seulement avec une souris */
+@media (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* Grain de papier très léger */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 90;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, 3%); }
+  40% { transform: translate(3%, -6%); }
+  60% { transform: translate(-7%, 2%); }
+  80% { transform: translate(5%, 5%); }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Lignes de titre masquées pour la révélation */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+/* Flamme qui vacille (écran de chargement et décor) */
+@keyframes flicker {
+  0%, 100% { transform: scale(1, 1) rotate(-1deg); }
+  25% { transform: scale(0.97, 1.04) rotate(1.5deg); }
+  50% { transform: scale(1.03, 0.97) rotate(-0.5deg); }
+  75% { transform: scale(0.98, 1.03) rotate(1deg); }
+}
+.flicker {
+  transform-origin: 50% 90%;
+  animation: flicker 1.6s ease-in-out infinite;
+}
+
+/* Pastilles de l'atelier qui s'allument */
+.step-dot {
+  scale: 0.6;
+  transition: scale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s, box-shadow 0.6s;
+}
+.step-dot.lit {
+  scale: 1;
+  background: var(--accent);
+  box-shadow: 0 0 0 8px var(--accent-soft), 0 0 40px 6px rgb(var(--glow) / 0.55);
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-dot {
+    scale: 1;
+    background: var(--accent);
+  }
+}
+
+/* Champs de formulaire */
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0.85rem 0 0.6rem;
+  font-size: 1rem;
+  color: var(--ink);
+  transition: border-color 0.3s;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.field::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain::after {
+    animation: none;
+  }
+}
